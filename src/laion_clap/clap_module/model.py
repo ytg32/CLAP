@@ -20,7 +20,8 @@ from .utils import freeze_batch_norm_2d
 
 from .pann_model import create_pann_model
 from .htsat import create_htsat_model
-from transformers import BertModel, RobertaModel, BartModel
+from .beats import create_beats_model
+from transformers import BertModel, RobertaModel, BartModel, ModernBertModel
 from transformers.tokenization_utils_base import BatchEncoding
 
 
@@ -465,6 +466,8 @@ class CLAP(nn.Module):
             self.audio_branch = create_pann_model(audio_cfg, enable_fusion, fusion_type)
         elif audio_cfg.model_type == "HTSAT":
             self.audio_branch = create_htsat_model(audio_cfg, enable_fusion, fusion_type)
+        elif audio_cfg.model_type == "BEATs":
+            self.audio_branch = create_beats_model(audio_cfg, enable_fusion, fusion_type)
         else:
             logging.error(f"Model config for {audio_cfg.model_type} not found")
             raise RuntimeError(f"Model config for {audio_cfg.model_type} not found.")
