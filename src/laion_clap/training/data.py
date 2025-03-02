@@ -30,6 +30,9 @@ from clap_module import tokenize as clip_tokenizer
 from transformers import BertTokenizer
 from transformers import RobertaTokenizer
 from transformers import BartTokenizer
+from transformers import AutoTokenizer
+
+import torchaudio.transforms as T
 
 try:
     import horovod.torch as hvd
@@ -41,6 +44,7 @@ try:
 except ImportError:
     torchaudio = None
 
+modern_bert_tokenizer = AutoTokenizer.from_pretrained("answerdotai/ModernBERT-base")
 bert_tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 roberta_tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 bart_tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
@@ -76,6 +80,15 @@ def tokenizer(text, tmodel="roberta", max_length=77):
 
     elif tmodel == "bart":
         result = bart_tokenizer(
+            text,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        return {k: v.squeeze(0) for k, v in result.items()}
+    elif tmodel == 'modern_bert':
+        result = modern_bert_tokenizer(
             text,
             padding="max_length",
             truncation=True,
