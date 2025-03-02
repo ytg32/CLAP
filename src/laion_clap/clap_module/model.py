@@ -525,6 +525,16 @@ class CLAP(nn.Module):
                 mlp_act_layer,
                 nn.Linear(self.joint_embed_shape, self.joint_embed_shape)
             )
+        elif text_cfg.model_type == 'modern_bert':
+            self.text_branch = ModernBertModel.from_pretrained('answerdotai/ModernBERT-base')
+            self.text_transform = MLPLayers(units=[self.joint_embed_shape,
+                                                   self.joint_embed_shape,
+                                                   self.joint_embed_shape], dropout=0.1)
+            self.text_projection = nn.Sequential(
+                nn.Linear(768, self.joint_embed_shape),
+                mlp_act_layer,
+                nn.Linear(self.joint_embed_shape, self.joint_embed_shape)
+            )                                 
         else:
             logging.error(f"Model config for {text_cfg.model_type} not found")
             raise RuntimeError(f"Model config for {text_cfg.model_type} not found.")
@@ -569,6 +579,8 @@ class CLAP(nn.Module):
             width = self.text_branch.embeddings.word_embeddings.weight.shape[-1]
         elif self.text_branch_type == "bart":
             width = self.text_branch.shared.weight.shape[-1]
+        elif self.text_branch_type == "modern_bert":
+            width = 768
         else:
             width = self.text_branch.width
         nn.init.constant_(self.logit_scale_a, np.log(1 / 0.07))
@@ -644,6 +656,14 @@ class CLAP(nn.Module):
                     device=device, non_blocking=True
                 ),
             )["encoder_last_hidden_state"],axis=1)
+            x = self.text_projection(x)
+        elif self.text_branch_type == "modern_bert":
+            x = torch.mean(self.text_branch(
+                input_ids=text["input_ids"].to(device=device, non_blocking=True),
+                attention_mask=text["attention_mask"].to(
+                    device=device, non_blocking=True
+                )
+            )["last_hidden_state"],axis=1)
             x = self.text_projection(x)
         else:
             logging.error(f"Model type {self.text_branch_type} not found")
