@@ -298,6 +298,15 @@ def main():
         if 'text_branch' in n
     ]
 
+    audio_freeze_parameters = [
+        p for n, p in named_parameters if 'audio_branch' in n
+    ]
+
+    if args.freeze_audio:
+        print("Freeze Audio!!!!")
+        for k in audio_freeze_parameters:
+            k.requires_grad = False
+
     if args.freeze_text:
         print("Freeze Text!!!!")
         for k in text_freeze_parameters:
@@ -482,7 +491,7 @@ def main():
             args.val_sz = data["val"].dataloader.num_samples
         # you will have to configure this for your project!
         wandb.init(
-            entity="clap",
+            entity="ytg32",
             project="clap",
             notes=args.wandb_notes,
             name=args.wandb_notes,
