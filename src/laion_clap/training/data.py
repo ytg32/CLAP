@@ -566,6 +566,12 @@ def preprocess_single(
     Preprocess a single sample for wdsdataloader.
     """
     audio_data, orig_sr = sample[audio_ext]
+    #print(audio_data.shape[1] / orig_sr)
+    resampler = T.Resample(orig_freq=orig_sr, new_freq=audio_cfg['sample_rate'])
+    audio_data = resampler(audio_data)
+    #print(audio_data.shape[1] / audio_cfg['sample_rate'])
+    #print("----------")
+
     audio_data = int16_to_float32_torch(float32_to_int16_torch(audio_data[0]))
 
     sample = get_audio_features(sample, audio_data, max_len, data_truncating, data_filling, audio_cfg)
