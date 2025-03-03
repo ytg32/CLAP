@@ -21,8 +21,13 @@ class BEATsClassifier(nn.Module):
         sample = {}
         #print(x.keys())
         x = x["waveform"].to(device=device, non_blocking=True)
-        #print(x.shape)
-        sample["embedding"] = self.model.extract_features(x, None)[0]
+        if torch.isnan(x).any():
+            mask = torch.isnan(x)
+            x = torch.nan_to_num(x)
+        else:
+            mask = torch.zeros(x.shape).bool()
+        
+        sample["embedding"] = self.model.extract_features(x, mask)[0]
         return sample
 
 

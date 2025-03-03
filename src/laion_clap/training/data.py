@@ -503,6 +503,13 @@ def get_audio_features(sample, audio_data, max_len, data_truncating, data_fillin
                 elif data_filling == "repeat":
                     n_repeat = int(max_len / len(audio_data))
                     audio_data = audio_data.repeat(n_repeat + 1)[:max_len]
+                elif data_filling == "beats_pad":
+                    audio_data = F.pad(
+                        audio_data,
+                        (0, max_len - len(audio_data)),
+                        mode="constant",
+                        value=float('nan'),
+                    )
                 else:
                     raise NotImplementedError(
                         f"data_filling {data_filling} not implemented"
