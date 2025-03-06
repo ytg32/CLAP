@@ -2,7 +2,6 @@
     "embed_dim": 768,
     "audio_cfg": {
         "sample_rate": 16000,
-        "class_num": 768,
         "model_type": "BEATs"
     },
     "text_cfg": {
