@@ -910,12 +910,14 @@ def get_data(args, model_cfg):
 
     if args.train_data:
         data["train"] = get_dataset_fn(args.dataset_type)(
-            args, model_cfg, is_train=True
+            args, model_cfg, is_train=True, 
+            audio_ext=args.audio_ext, max_len = args.audio_max_len
         )
 
     if args.val_data:
         data["val"] = get_dataset_fn(args.dataset_type)(
-            args, model_cfg, is_train=False
+            args, model_cfg, is_train=False,
+            audio_ext=args.audio_ext, max_len = args.audio_max_len
         )
 
     return data
