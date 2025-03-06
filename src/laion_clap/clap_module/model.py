@@ -663,7 +663,9 @@ class CLAP(nn.Module):
                 attention_mask=text["attention_mask"].to(
                     device=device, non_blocking=True
                 )
-            )["last_hidden_state"],axis=1)
+            )["last_hidden_state"],axis=1) 
+            # https://discuss.huggingface.co/t/last-hidden-state-vs-pooler-output-in-clipvisionmodel/26281
+            # average vs pooling should give similar results.
             x = self.text_projection(x)
         else:
             logging.error(f"Model type {self.text_branch_type} not found")
