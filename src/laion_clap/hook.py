@@ -116,7 +116,11 @@ class CLAP_Module(torch.nn.Module):
         if verbose:
             param_names = [n for n, p in self.model.named_parameters()]
             for n in param_names:
-                logging.info(n, "\t", "Loaded" if n in ckpt else "Unloaded")
+                if n in ckpt:
+                    logging.info(f"{n}  Loaded")
+                else:
+                    logging.info(f"{n}  Unloaded")
+                    ğ
     
     def get_audio_embedding_from_filelist(self, x, use_tensor=False):
         """get audio embeddings from the audio file list
