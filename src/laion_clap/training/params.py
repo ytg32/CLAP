@@ -31,6 +31,18 @@ def parse_args():
         help="if you need to freeze the text encoder, make this True",
     )
     parser.add_argument(
+        "--audio-ext",
+        type=str,
+        default="flac",
+        help="Type of audio extension",
+    )
+    parser.add_argument(
+        "--audio-max-len",
+        type=int,
+        default=480_000,
+        help="Maximum length of audio (sample_rate x duration_in_sec)",
+    )
+    parser.add_argument(
         "--freeze-text",
         default=False,
         action="store_true",
