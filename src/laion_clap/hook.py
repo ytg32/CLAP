@@ -16,7 +16,7 @@ from .training.data import int16_to_float32, float32_to_int16
 from transformers import RobertaTokenizer
 import wget
 from clap_module.factory import load_state_dict
-
+from transformers import AutoTokenizer
 
 class CLAP_Module(torch.nn.Module):
     def __init__(self, enable_fusion=False, device=None, amodel= 'HTSAT-tiny', tmodel='roberta') -> None:
@@ -60,7 +60,12 @@ class CLAP_Module(torch.nn.Module):
         self.enable_fusion = enable_fusion
         self.model = model
         self.model_cfg = model_cfg
-        self.tokenize = RobertaTokenizer.from_pretrained('roberta-base')
+        if tmodel == 'roberta':
+            self.tokenize = RobertaTokenizer.from_pretrained('roberta-base')
+        elif tmodel == 'modern_bert':
+            self.tokenize = AutoTokenizer.from_pretrained("answerdotai/ModernBERT-base")
+        else:
+            raise NotImplmentedError("tokenizer is not configured")
 
     def tokenizer(self, text):
         result = self.tokenize(
