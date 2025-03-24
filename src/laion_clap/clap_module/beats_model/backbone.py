@@ -635,7 +635,7 @@ class MultiheadAttention(nn.Module):
             attn_weights = attn_weights.view(bsz, self.num_heads, tgt_len, src_len)
             if not is_tpu:
                 attn_weights = attn_weights.masked_fill(
-                    key_padding_mask.unsqueeze(1).unsqueeze(2).to('cuda' if torch.cuda.is_available() else 'cpu'),
+                    key_padding_mask.unsqueeze(1).unsqueeze(2).to(attn_weights.device),
                     float("-inf"),
                 )
             else:
