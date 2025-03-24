@@ -145,13 +145,13 @@ class CLAP_Module(torch.nn.Module):
         audio_input = []
         for f in x:
             # load the waveform of the shape (T,), should resample to 48000
-            audio_waveform, _ = librosa.load(f, sr=48000)           
+            audio_waveform, _ = librosa.load(f, sr=16_000)           
             # quantize
             audio_waveform = int16_to_float32(float32_to_int16(audio_waveform))
             audio_waveform = torch.from_numpy(audio_waveform).float()
             temp_dict = {}
             temp_dict = get_audio_features(
-                temp_dict, audio_waveform, 480000, 
+                temp_dict, audio_waveform, 16_0000, 
                 data_truncating='fusion' if self.enable_fusion else 'rand_trunc', 
                 data_filling='repeatpad',
                 audio_cfg=self.model_cfg['audio_cfg'],
@@ -188,7 +188,7 @@ class CLAP_Module(torch.nn.Module):
                 audio_waveform = torch.from_numpy(audio_waveform).float()
             temp_dict = {}
             temp_dict = get_audio_features(
-                temp_dict, audio_waveform, 480000, 
+                temp_dict, audio_waveform, 160_000, # check with HTSAST changing 160_000 should be sinmilar tough
                 data_truncating='fusion' if self.enable_fusion else 'rand_trunc', 
                 data_filling='repeatpad',
                 audio_cfg=self.model_cfg['audio_cfg'],
