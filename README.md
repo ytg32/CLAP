@@ -123,6 +123,14 @@ After running the code, the folder structure of the WebDataset should look like 
        └─ val
        └─ test
 
+## Pretrained audio model
+
+I used [BEATs](https://github.com/microsoft/unilm/tree/master/beats) as audio backbone. You can download the weights of the pretrained model from [here]()
+
+You will need to change model weight path in CLAP/src/laion_clap/clap_module/beats.py
+
+  def create_beats_model(audio_cfg, enable_fusion=False, fusion_type='None'):
+      return BEATsClassifier("/cluster/work/boraa/beans/model_weights/beats.pth")
 
 
 ## Training, Fine-tuning and Evaluation
