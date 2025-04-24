@@ -11,7 +11,6 @@ class BEATsClassifier(nn.Module): # Name does not make sense, it is more like en
         self.model = BEATs(cfg)
         self.model.load_state_dict(checkpoint['model'])
 
-        self.sap = SelfAttentionPooling(496)
     
     def forward(self, x: torch.Tensor, mixup_lambda = None, infer_mode = False, device=None):
         sample = {}
