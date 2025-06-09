@@ -299,7 +299,7 @@ def parse_args():
         "--tmodel",
         type=str,
         default="transformer",
-        help="Name of the text backbone to use. Can be [transformer, bert, roberta, bart, modern_bert]",
+        help="Name of the text backbone to use. Can be [transformer, bert, roberta, bart, modern_bert, mpnet-alligned]",
     )
     parser.add_argument(
         "--pretrained-audio",

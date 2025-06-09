@@ -64,8 +64,10 @@ class CLAP_Module(torch.nn.Module):
             self.tokenize = RobertaTokenizer.from_pretrained('roberta-base')
         elif tmodel == 'modern_bert':
             self.tokenize = AutoTokenizer.from_pretrained("answerdotai/ModernBERT-base")
+        elif tmodel == 'mpnet-alligned':
+            self.tokenize = AutoTokenizer.from_pretrained('/cluster/work/boraa/CLAP/caption_contrastive_ft/models/mpnet-base-v2/alligned')
         else:
-            raise NotImplmentedError("tokenizer is not configured")
+            raise NotImplementedError("tokenizer is not configured")
 
     def tokenizer(self, text):
         result = self.tokenize(

@@ -44,6 +44,8 @@ try:
 except ImportError:
     torchaudio = None
 
+
+mpnet_tokenizer = AutoTokenizer.from_pretrained('/cluster/work/boraa/CLAP/caption_contrastive_ft/models/mpnet-base-v2/alligned') 
 modern_bert_tokenizer = AutoTokenizer.from_pretrained("answerdotai/ModernBERT-base")
 bert_tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 roberta_tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
@@ -89,6 +91,15 @@ def tokenizer(text, tmodel="roberta", max_length=77):
         return {k: v.squeeze(0) for k, v in result.items()}
     elif tmodel == 'modern_bert':
         result = modern_bert_tokenizer(
+            text,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        return {k: v.squeeze(0) for k, v in result.items()}
+    elif tmodel == 'mpnet-alligned':
+        result = mpnet_tokenizer(
             text,
             padding="max_length",
             truncation=True,
